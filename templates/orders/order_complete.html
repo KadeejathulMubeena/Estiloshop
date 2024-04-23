@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 120px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Order Placed Successfully</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="{% url 'home' %}">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Order Placement Successful</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Order Details Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-6">
+                <div class="card mb-5">
+                    <h5 class="card-header text-center">Order Details</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Order Number: {{ order_number }}</h5>
+                        <p class="card-text">Thank you for your order. Your order has been successfully placed.</p>
+                        <h5 class="card-title">Billing Address</h5>
+                        <p class="card-text">{{ order.shipping_address}}</p>
+                        <p class="card-text">{{ order.email }}</p>
+                        <p class="card-text">{{ order.phone }}</p>
+                        {% if order.order_note %}
+                            <b>Order Note:</b> {{ order.order_note }}
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <h5 class="card-title">Payment Status</h5>
+                        {% if payment.status == 'Pending' %}
+                        <p class="card-text text-danger">{{payment.status}}</p>
+                        {% else %}
+                        <p class="card-text text-success">{{payment.status}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card mb-5">
+                    <h5 class="card-header text-center">Order Summary</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Payment Method</h5>
+                        <p class="card-text">Cash On Delivery</p>
+                        <h5 class="card-title">Review Product</h5>
+                        <p class="card-text">
+                            <table class="table table-bordered text-center mb-0">
+                                <thead class="bg-secondary text-dark">
+                                    <tr>
+                                        <th>Products</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="align-middle">
+                                    {% for item in ordered_products %}
+                                    <tr>
+                                        <td>
+                                            <img src="{{ item.product_attribute.image.url }}" alt="{{ item.product_attribute.product }}" style="width: 50px;">
+                                            {{ item.product }}
+                                            <div class="ml-5 mb-2" >                               
+                                                <p class="text-muted small mb-2">Size: {{item.product_attribute.size | capfirst}}, Color: {{item.product_attribute.color | capfirst}}</p>                         
+                                            </div>
+                                        </td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>Rs {{ item.product_price }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </p>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mb-3 pt-1">
+                            <h6 class="font-weight-medium">Subtotal</h6>
+                            <h6 class="font-weight-medium">Rs {{ subtotal }}</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Tax</h6>
+                            <h6 class="font-weight-medium">Rs {{ order.tax }}</h6>
+                        </div>
+                        {% if coupon_discount %}
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Discount</h6>
+                            <h6 class="font-weight-medium">- Rs {{ coupon_discount }}</h6>
+                        </div>
+                    {% endif %}
+                        
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Total</h5>
+                            <h5 class="font-weight-bold">Rs {{ order.order_total }}</h5>
+                        </div>
+                        <a href="{% url 'home' %}" class="btn btn-block btn-primary my-3 py-3">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Order Details End -->
+{% endblock content %}

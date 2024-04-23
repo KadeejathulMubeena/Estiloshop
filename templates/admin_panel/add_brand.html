@@ -1,0 +1,50 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+    <div class="pagetitle">
+        <h1>Add Brand</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'brand_list' %}">Brand list</a></li>      
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    {% include "alerts.html" %}
+    <div class="container mt-4">
+        <!-- add_brand.html -->
+    <form method="post" enctype="multipart/form-data" action="{% url 'add_brand' %}">
+        {% csrf_token %}
+        
+        <!-- Brand Name -->
+        <div class="mb-3 row">
+            <label for="{{ form.brand_name.id_for_label }}" class="col-sm-2 col-form-label">Brand Name:</label>
+            <div class="col-sm-4">
+                {{ form.brand_name }}
+            </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="mb-3 row">
+            <label for="{{ form.brand_image.id_for_label }}" class="col-sm-2 col-form-label">Image:</label>
+            <div class="col-sm-4">
+                {{ form.brand_image }}
+                {% if form.brand_image.value %}
+                    <img src="{{ form.brand_image.url }}" alt="Brand Image" class="img-thumbnail mt-2">
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mb-3 row ">
+            <div class="col-md-6 text-end">
+                <button type="submit" class="btn btn-primary ">Add Brand</button>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+    </form>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <style>
+        
+    @media screen {
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            margin: 0;
+        }
+        .salesreport{
+            margin: 6px;
+        }
+        .container {
+            width: 70%;
+            max-width: 1200px;
+            border: 1px solid #ccc;
+            padding: 18px;
+            height: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .sales-heading {
+            text-align: center;
+        }
+
+        th:first-child,
+        td:first-child {
+            max-width: 40px; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            white-space: nowrap;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .identity {
+            margin-top: 20px;
+        }
+
+        .action-button {
+            margin-left: 10px;
+        }
+        #pdfButton {
+            border-radius: 20px;
+            color: #141618;
+            background-color: #3887fe;
+            border-color: #3887fe;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px; 
+        }
+        #pdfButton:hover {
+            
+            background-color: #0d6efd;
+            color: white;
+            
+        }
+        #excelButton {
+            border-radius: 20px;
+            color: #141618;
+            background-color: #3887fe;
+            border-color: #3887fe;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px; 
+        }
+        #excelButton:hover {
+            background-color: #0d6efd;
+            color: white;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="section salesreport">
+            <div class="row">
+                <!-- Left side columns -->
+                <div class="col-lg-11">
+                    <div class="row">
+                        <h1 class="sales-heading">Sales Report</h1>
+                        <p class="sales-heading">From: {{ start_date }}  To: {{ end_date }}</p>
+
+                        <div class="content">
+                            <p>Overall Sales Count: {{ sales_count }}</p>
+                            <p>Overall Order Amount: {{ ordered_amount }}</p>
+                        </div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>SI</th>
+                                    <th>Order Number</th>
+                                    <th>Order Date</th>
+                                    <th>Products</th>
+                                    <th>Subtotal</th>
+                                    <th>Tax</th>
+                                    <th>Coupon</th>
+                                    <th>Total</th>
+                                    <th>Payment Method</th>
+                                    <th>Payment Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>  <!-- Serial Number -->
+                                    <td>{{order.order_number }}</td>  <!-- Order Number -->
+                                    <td>{{ order.created_at|date:"Y-m-d" }}</td>  <!-- Order Date -->
+                                    <td>{{ order.quantity }}</td>  
+                                    <td>{{ order.subtotal }}</td>
+                                    <td>{{order.tax}}</td>
+                                    <td>{{ order.coupon.discount }}</td>  <!-- Coupon discount --> 
+                                    <td>{{ order.order_total }}</td>  <!-- Grand Total -->
+                                    <td>{{ order.payment.payment_method }}</td>  <!-- Payment Method -->
+                                    <td>{{ order.payment.status }}</td>  <!-- Payment Status -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+        <div class="row">
+            <div class="col-md-10 text-right identity">
+                <button id="pdfButton" class="action-button">
+                    Download Pdf
+                </button>
+                <button id="excelButton" class="action-button excel-button">
+                    Download Excel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
+
+    <script>
+    document.getElementById("pdfButton").addEventListener("click", function () {
+        // Hide buttons before generating PDF
+        document.getElementById("pdfButton").style.display = "none";
+        document.getElementById("excelButton").style.display = "none";
+
+        const salesreportContainer = document.querySelector(".salesreport");
+        const pdfOptions = {
+            filename: 'salesreport.pdf',
+            image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().from(salesreportContainer).set(pdfOptions).save();
+
+        // Show buttons again after generating PDF
+        document.getElementById("pdfButton").style.display = "inline-block";
+        document.getElementById("excelButton").style.display = "inline-block";
+    });
+
+    document.getElementById("excelButton").addEventListener("click", function () {
+        const salesreportTable = document.querySelector('.salesreport table');
+        const wb = XLSX.utils.table_to_book(salesreportTable, { sheet: "Sheet1" });
+
+        wb.Sheets['Sheet1']['!cols'] = [
+        { wch: 5 }, // SI
+        { wch: 15 }, // Order Number
+        { wch: 12 }, // Order Date
+        { wch: 12 }, // Total products
+        { wch: 8 }, // subtotal
+        { wch: 8 }, // Tax
+        { wch: 8 }, // Coupon
+        { wch: 12 },//Grand Total
+        { wch: 15 }, // Payment Method
+        { wch: 15 } // Payment Status
+    ];
+    
+        const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+        function s2ab(s) {
+            const buf = new ArrayBuffer(s.length);
+            const view = new Uint8Array(buf);
+            for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
+
+        const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'salesreport.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+</script>
+
+</body>
+</html>

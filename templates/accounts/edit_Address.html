@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <!-- Edit Address Form Start -->
+    <section class="section-content padding-y">
+
+        <div class="card mx-auto" style="max-width: 520px; margin-top: 40px;">
+            <article class="card-body">
+                {% include "alerts.html" %}
+                <header class="mb-4 text-center"><h4 class="card-title text-primary">Edit Address</h4></header>
+                    <form method="post" id="editAddressForm" data-cities-url="{% url 'ajax_load_district' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="address_id" value="{{ address.id }}">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="id_address_line_1">Address Line 1</label>
+                                <input id="id_address_line_1" class="form-control" type="text" name="address_line_1" value="{{ address.address_line_1 }}">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_address_line_2">Address Line 2</label>
+                                <input id="id_address_line_2" class="form-control" type="text" name="address_line_2" value="{{ address.address_line_2 }}">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_country">Country</label>
+                                <input class="form-control" type="text" name="country" value="{{ address.country }}" readonly>
+                            </div>                            
+                            <div class="col-md-6 form-group">
+                                <label for="id_state">State</label>
+                                <select id="id_state" class="custom-select" name="state">
+                                    <option value="{{ address.state.id }}" selected>{{ address.state }}</option>
+                                    {% for state in states %}
+                                    <option value="{{ state.id }}">{{ state }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_district">District</label>
+                                <select id="id_district" class="custom-select" name="district">
+                                    <option value="{{ address.district.id }}" selected>{{ address.district }}</option>
+                                    <!-- Ajax-loaded districts will be added here dynamically -->
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_postal_code">ZIP Code</label>
+                                <input id="id_postal_code" class="form-control" type="text" name="postal_code" value="{{ address.postal_code }}">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </article>
+            </div>           
+        </section>
+    <!-- Edit Address Form End -->
+
+    <!-- Ajax Script -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#id_state").change(function () {
+                const url = $("#editAddressForm").attr("data-cities-url");
+                const stateId = $(this).val();
+
+                $.ajax({
+                    url: url,
+                    data: {
+                        'state_id': stateId
+                    },
+                    success: function (data) {
+                        $("#id_district").html(data);
+                    }
+                });
+
+            });
+        });
+    </script>
+
+{% endblock content %}

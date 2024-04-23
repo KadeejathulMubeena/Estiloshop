@@ -1,0 +1,79 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+  <div class="container mt-4">
+    {% include "alerts.html" %}
+    <h2 class="text-primary mb-4">{{attribute.product}}</h2>
+    
+
+    {% if product_images %}
+      {% for product_attribute in product_attributes %}
+        {% if product_attribute.p_images.all.count > 0 %}
+          <div class="card mb-4">
+            <div class="card-body mt-2">
+              <h3 class="text-center text-primary mb-3">Size : {{ product_attribute.size }}, Color : {{ product_attribute.color }}</h3>
+              <div class="row">
+                {% for image in product_attribute.p_images.all %}
+                  <div class="col-md-4 mb-3 align-items-center">
+                    <div class="position-relative">
+                      {% if image.image %}
+                        <img src="{{ image.image.url }}" class="card-img-top" style="width: 100px; height: 150px;" alt="Product Image">
+                      {% else %}
+                        <p>Error: No file associated with this image.</p>
+                      {% endif %}
+                      <div class="justify-content-between align-items-center mt-4 " >
+                        <form method="post" action="{% url 'delete_images' image.id %}" class="d-inline">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </form>
+                      </div>
+                      <div class="mt-3">
+                        <p class="card-text " style="font-size: small;">Uploaded on: {{ image.date }}</p>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <p class="text-center">No product images found.</p>
+    {% endif %}
+  </div>
+  <a href="{% url 'product_images_list' %}"  >Back to Product list</a>
+
+  <div class="col-12 pb-1">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mb-3">
+            {% if product_images.has_previous %}                                   
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ product_images.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            {% endif %}   
+            {% for num in product_images.paginator.page_range %}
+                <li class="page-item {% if num == product_images.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endfor %}   
+            {% if product_images.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ product_images.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>                              
+            {% endif %}
+        </ul>
+    </nav>
+</div>  
+</main>
+{% endblock %}

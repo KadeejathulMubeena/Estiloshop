@@ -1,0 +1,45 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+
+  <div class="pagetitle">
+    <h1>Add Images to Product</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'product_images_list' %}">Image List</a></li>
+        </ol>
+    </nav>
+  </div>
+  <div class="container mt-4">
+{% include "alerts.html" %}
+    <form method="post" enctype="multipart/form-data" action="{% url 'add_product_images' %}">
+        {% csrf_token %}
+        
+        <div class="mb-3 row">
+          <label for="images" class="col-sm-2 col-form-label">Select Images:</label>
+          <div class="col-sm-10">
+            <input type="file" class="form-control" name="images" accept="image/*" style='width:500px' multiple required>
+          </div>
+        </div>
+    
+        <div class="mb-3 row">
+          <label for="product_attribute_id" class="col-sm-2 col-form-label">Select Product Attribute:</label>
+          <div class="col-sm-10">
+            <select class="form-select" name="product_attribute_id" style='width:500px' required>
+              {% for product_attribute in product_attributes %}
+                <option value="{{ product_attribute.id }}">{{ product_attribute.product.name }} - {{ product_attribute.color }} - {{ product_attribute.size }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+    
+        <div class="mb-3 text-center">
+          <button type="submit" class="btn btn-primary">Add Images</button>
+        </div>
+       
+    </form>
+  </div>
+</main>
+{% endblock %}

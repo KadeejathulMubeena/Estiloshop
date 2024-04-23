@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <!-- Page Header Start -->
+   
+    <!-- Page Header End -->
+
+
+    <!-- Checkout Start -->
+    <section class="section-content padding-y">
+
+        <div class="card mx-auto" style="max-width: 520px; margin-top: 40px;">
+            <article class="card-body">
+                {% include "alerts.html" %}
+                <header class="mb-4 text-center"><h4 class="card-title text-primary">Add Address</h4></header>
+                    <form method="post" action="{% url 'add_address' %}" id="addressForm" data-cities-url="{% url 'ajax_load_district' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="id_address_line_1">Address Line 1</label>
+                                <input id="id_address_line_1" class="form-control" type="text" name="address_line_1" placeholder="123 Street">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_address_line_2">Address Line 2</label>
+                                <input id="id_address_line_2" class="form-control" type="text" name="address_line_2" placeholder="123 Street">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_country">Country</label>
+                                <input class="form-control" type="text" name="country" value="India" readonly>
+                            </div>                            
+                            <div class="col-md-6 form-group">
+                                <label for="id_state">State</label>
+                                <select id="id_state" class="custom-select" name="state">
+                                    <option  selected>----------</option>
+                                    {% for state in states %}
+                                    <option value="{{state.id}}" >{{state}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_state">District</label>
+                                <select id="id_district" class="custom-select" name="district">
+                                    <option  selected>----------</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_postal_code">ZIP Code</label>
+                                <input id="id_postal_code" class="form-control" type="text" name="postal_code" placeholder="123">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Address</button>
+                        </div>
+                    </form>
+                </article>
+            </div>           
+        </section>
+        
+    <!-- Add Address Form End -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $("#id_state").change(function () {
+            const url = $("#addressForm").attr("data-cities-url");  // get the url of the `load_cities` view
+            const stateId = $(this).val();  // get the selected country ID from the HTML input
+    
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+                data: {
+                    'state_id': stateId       // add the country id to the GET parameters
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_district").html(data);  // replace the contents of the city input with the data that came from the server
+                    
+                }
+            });
+    
+        });
+    </script>
+
+
+{% endblock content %}

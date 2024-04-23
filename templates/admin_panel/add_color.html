@@ -1,0 +1,44 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+    <div class="pagetitle">
+        <h1>Add Color</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'size_color' %}">Size Color List</a></li>      
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    {% include "alerts.html" %}
+    <div class="container mt-4">
+        <form method="post" action="{% url 'add_color' %}">
+        {% csrf_token %}
+            <div class="mb-3 row">
+                <label for="id_title" class="col-sm-2 col-form-label">Color Title:</label>
+                <div class="col-md-4">
+                    {{ form.title }}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="id_color_code" class="col-sm-2 col-form-label">Color Code:</label>
+                <div class="col-md-4">
+                    {{ form.color_code }}
+                </div>
+            </div>
+            <div class="mb-3 row ">
+                <div class="col-md-6 text-end">
+                    <button type="submit" class="btn btn-primary ">Add Color</button>
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+            </form>
+        <div class="mt-3">
+            <a href="{% url 'size_color' %}" >Back to Size and Color List</a>
+        </div>
+        <a href="{% url 'add_size' %}" >Add Size </a>
+    </div>          
+</main>
+{% endblock content %}

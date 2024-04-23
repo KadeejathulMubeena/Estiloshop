@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static %}
+{% load chunks %}
+{% load tz %}
+
+
+    {% block content %}
+    
+    <!-- Shop Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <!-- Shop Sidebar Start -->
+            {% include "shop/filter.html" %}
+            <!-- Shop Product Start -->
+            <div class="col-lg-9 col-md-12">
+                <div class="row pb-3">
+                    <div class="col-12 pb-1">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <p class="font-weight-semi-bold m-0">{{ products_count }} items found</p>
+                            <div class="dropdown ml-4">
+                                <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                            Sort by
+                                        </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                                    <a class="dropdown-item" href="{% url "shop_latest" %}">Latest</a>
+                                    <a class="dropdown-item" href=" {% url "low_to_high" %} ">Price:Low - High</a>
+                                    <a class="dropdown-item" href=" {% url "high_to_low" %} ">Price:High - low</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container products">
+                        
+                        {% if products_with_attributes %}
+                                {% for product_with_attribute in products_with_attributes %}
+                                    {% if forloop.counter0|divisibleby:3 %}
+                                        <div class="row">
+                                    {% endif %}
+                                        <div class="col-lg-4 col-md-6 col-sm-12 pb-1 product-attribute">
+                                            <div class="card product-item border-0 mb-4">
+                                                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                                    <img class="img-fluid w-100" style="height:350px" src="{{ product_with_attribute.first_attribute.image.url }}" alt="">
+                                                </div>
+                                                <div class="card-body border-left border-right text-center p-0 pt-3 pb-2">
+                                                    <h5 class="text-truncate mb-2">{{ product_with_attribute.product.name|capfirst }}</h5>
+                                                    <p>Size : {{ product_with_attribute.first_attribute.size }} , Color : {{ product_with_attribute.first_attribute.color }}</p>
+                                                    <div class="d-flex justify-content-center mt-2"> 
+                                                        {% if  product_with_attribute.first_attribute.offer_price %}                      
+                                                        <h6 class="data-price product-price">Rs {{ product_with_attribute.first_attribute.offer_price }}</h6><h6 class="text-muted ml-2"><del>Rs {{ product_with_attribute.first_attribute.price }}</del></h6>
+                                                        <p class="text-success ml-3"> {{ product_with_attribute.discount_percentage }} % off</p>
+                                                        {% else %}
+                                                        <h6 class="data-price product-price">Rs {{ product_with_attribute.first_attribute.price }}</h6>
+                                                        {% endif %}
+                                                    </div>
+                                                    {% if product_with_attribute.first_attribute.stock > 0 %}
+                                                        {% if product_with_attribute.first_attribute.stock < 6 %}
+                                                            <p class="text-danger small mb-0">Only {{ product_with_attribute.first_attribute.stock }} stock left</p>
+                                                        {% else %}
+                                                            <p class="text-success small mb-0"> In stock</p>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <p class="text-danger small mb-0">Out Of stock</p>
+                                                    {% endif %}
+                                                    {% if product_with_attribute.discount_percentage and product_with_attribute.first_attribute.stock > 0 %}
+                                                        {% if product_with_attribute.product_offer and product_with_attribute.category_offer %}
+                                                            {% if product_with_attribute.product_offer.discount_percentage > product_with_attribute.category_offer.discount_percentage %}
+                                                                <p>{{ product_with_attribute.product_offer.name }}</p>
+                                                                {% if product_with_attribute.p_remaining_days > 0 %}
+                                                                    <p class="text-success">Offer Ends In: {{ product_with_attribute.p_remaining_days }} days</p>
+                                                                {% elif product_with_attribute.p_remaining_days == 0 %}
+                                                                    <p class="text-danger">Offer will end today</p>
+                                                                {% else %}
+                                                                    <p class="text-danger">Offer has ended</p>
+                                                                {% endif %}
+                                                            {% else %}
+                                                                <p>{{ product_with_attribute.category_offer.name }}</p>
+                                                                    {% if product_with_attribute.c_remaining_days > 0 %}
+                                                                        <p class="text-success">Offer Ends In: {{ product_with_attribute.c_remaining_days }} days</p>
+                                                                    {% elif product_with_attribute.p_remaining_days == 0 %}
+                                                                        <p class="text-danger">Offer will end today</p>
+                                                                    {% else %}
+                                                                        <p class="text-danger">Offer has ended</p>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                        {% elif product_with_attribute.product_offer %}
+                                                            <p> {{ product_with_attribute.product_offer.name }}</p>
+                                                                {% if product_with_attribute.p_remaining_days > 0 %}
+                                                                    <p class="text-success">Offer Ends In: {{ product_with_attribute.p_remaining_days }} days</p>
+                                                                {% elif product_with_attribute.p_remaining_days == 0 %}
+                                                                    <p class="text-danger">Offer will end today</p>
+                                                                {% else %}
+                                                                    <p class="text-danger">Offer has ended</p>
+                                                                {% endif %}
+                                                        {% elif product_with_attribute.category_offer %}
+                                                            <p> {{ product_with_attribute.category_offer.name }}</p>
+                                                                {% if product_with_attribute.c_remaining_days > 0 %}
+                                                                    <p class="text-success">Offer Ends In: {{ product_with_attribute.c_remaining_days }} days</p>
+                                                                {% elif product_with_attribute.p_remaining_days == 0 %}
+                                                                    <p class="text-danger">Offer will end today</p>
+                                                                {% else %}
+                                                                    <p class="text-danger">Offer has ended</p>
+                                                                {% endif %}
+                                                        {% endif %}
+                                                    
+                                                    {% endif %}
+                                            
+                                                </div>
+                                                <div class="card-footer d-flex justify-content-between bg-light border">
+                                                    <a href="{{ product_with_attribute.product.get_url }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                                                    <a href="{% url 'add_wishlist' product_with_attribute.product.id %}" class="btn btn-sm text-dark p-0"><i class="fas fa-heart text-primary mr-1"></i>Add To Wishlist</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if forloop.counter|divisibleby:3 or forloop.last %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <div class='ml-3'>
+                                <h3 class="m-0">No result found.Please try again .</h3>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!--    paginator    -->
+                    <div class="col-12 pb-1">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center mb-3">
+                                {% if products_with_attributes.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ products_with_attributes.previous_page_number }}{% if request.GET.below_1000 %}&below_1000=below-1000{% endif %}{% if request.GET.1000_to_2000 %}&1000_to_2000=1000-2000{% endif %}{% if request.GET.2000_to_3000 %}&2000_to_3000=2000-3000{% endif %}{% if request.GET.3000_to_4000 %}&3000_to_4000=3000-4000{% endif %}{% if request.GET.4000_to_5000 %}&4000_to_5000=4000-5000{% endif %}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% for num in products_with_attributes.paginator.page_range %}
+                                    <li class="page-item {% if num == products_with_attributes.number %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}{% if request.GET.below_1000 %}&below_1000=below-1000{% endif %}{% if request.GET.1000_to_2000 %}&1000_to_2000=1000-2000{% endif %}{% if request.GET.2000_to_3000 %}&2000_to_3000=2000-3000{% endif %}{% if request.GET.3000_to_4000 %}&3000_to_4000=3000-4000{% endif %}{% if request.GET.4000_to_5000 %}&4000_to_5000=4000-5000{% endif %}">{{ num }}</a>
+                                    </li>
+                                {% endfor %}
+                                {% if products_with_attributes.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ products_with_attributes.next_page_number }}{% if request.GET.below_1000 %}&below_1000=below-1000{% endif %}{% if request.GET.1000_to_2000 %}&1000_to_2000=1000-2000{% endif %}{% if request.GET.2000_to_3000 %}&2000_to_3000=2000-3000{% endif %}{% if request.GET.3000_to_4000 %}&3000_to_4000=3000-4000{% endif %}{% if request.GET.4000_to_5000 %}&4000_to_5000=4000-5000{% endif %}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                                      
+                    <!--   end paginator    -->
+                </div>
+            </div>
+            <!-- Shop Product End -->
+        </div>
+    </div>
+    <!-- Shop End -->
+
+{% endblock content %}
+
+    

@@ -1,0 +1,32 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+        <div class="pagetitle">
+            <h1>Product Image list</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Home</a></li>
+                </ol>
+            </nav>
+            <div class="text-end mb-3">
+              <a href="{% url 'add_product_images' %}" class="btn btn-primary ">Add Images</a>
+            </div>
+        </div>
+        <div class="container mt-4">
+      <div class="card mb-4">
+        <div class="card-body mt-2">
+          <br>
+          <div class="row">
+            {% for i in products %}
+             <a href="{% url "product_images" i.id %}" class=" text-primary mb-3">{{ i }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+   </div>
+  </div>  
+</main>
+{% endblock %}

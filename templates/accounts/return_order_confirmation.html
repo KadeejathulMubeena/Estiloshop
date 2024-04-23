@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+	<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 170px">
+		<h1 class="font-weight-semi-bold text-uppercase mb-3">Order Return</h1>
+		<div class="d-inline-flex">
+			<p class="m-0"><a href="{% url "home" %}">Home</a></p>
+			<p class="m-0 px-2">-</p>
+			<p class="m-0">Order Return</p>
+		</div>
+	</div>
+</div>
+<!-- Page Header End -->
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+<div class="container-fluid">
+	<div class="row">
+		<aside class="col-md-3">
+			{% include "accounts/sidebar.html" %}
+		</aside>
+		<main class="col-md-9">
+			<article class="card">
+				<header class="card-header">
+					<h5 class="card-title">Order Return</h5>
+				</header>
+				<div class="card-body">
+					<p>Are you sure you want to return this order?</p>
+					<form method="post" action="{% url 'return_order' order_id=order.id %}">
+						{% csrf_token %}
+						<div class="form-group">
+							<label for="return_reason">Return Reason:</label>
+							<input type="text" id="return_reason" name="return_reason" class="form-control" required>
+						</div>
+						<button type="submit" class="btn btn-danger">Confirm Return</button>
+						<a href="{% url 'my_orders'  %}" class="btn btn-secondary">Cancel</a>
+					</form>
+				</div>
+			</article>
+		</main>
+	</div> <!-- row.// -->
+</div>
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+{% endblock content %}

@@ -1,0 +1,102 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>All Brands</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href={% url "admin_home" %}>Home</a></li>      
+        </ol>
+      </nav>
+      <div class="text-end mb-3">
+        <a href="{% url 'add_brand' %}" class="btn btn-primary ">Add Brand</a>
+      </div>
+    </div><!-- End Page Title -->
+  {% include "alerts.html" %}
+<section class="section">    
+    <div class="row">        
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{brand_count}} items found</h5>
+            <!-- Table with stripped rows -->
+            <table class="table ">
+                <thead>
+                    <tr>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Active</th>
+                    <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in brand %}
+                    <tr>
+                        <td style="position: relative;">
+                            {{ i.brand_name }}
+                        </td>
+                        <td>
+                            {% if i.brand_image %}
+                                <img style="width: 50px; height: auto;" src="{{ i.brand_image.url }}" alt="Image">
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not i.soft_delete %}
+                                <form method="post" action="{% url 'soft_delete_brand' i.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn text-success">&#x2705;</button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{% url 'unlist_brand' i.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn text-danger" >&#x274C;</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'edit_brand' i.id %}" role="button" ><i class="bi bi-pencil-square" style="font-size: 20px;"></i></a>
+                        </td>
+                    </tr>
+                       
+                    {% endfor %}                              
+                </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--    paginator    -->
+    <div class="col-12 pb-1">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mb-3">
+                {% if brand.has_previous %}                                   
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ brand.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                {% endif %}   
+                {% for num in brand.paginator.page_range %}
+                    <li class="page-item {% if num == brand.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endfor %}   
+                {% if brand.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ brand.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>                              
+                {% endif %}
+            </ul>
+        </nav>
+    </div>                   
+    <!--   end paginator    -->
+</section>
+</main>
+  {% endblock content %}

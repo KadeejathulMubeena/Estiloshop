@@ -1,0 +1,66 @@
+{% load static %}
+
+<div class="col-lg-3 col-md-12">
+    <form id="filterForm" action="{% url 'filter_products' %}" method="GET">
+        <!-- Price Filter -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-4">Filter by price</h5>
+            <ul id="price-filter" class="list-unstyled">
+                <li class="mb-3">
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                        <input type="checkbox" class="custom-control-input" id="below-1000" name="below_1000" value="below-1000"{% if request.GET.below_1000 == 'below-1000' %} checked {% endif %}>
+                        <label class="custom-control-label" for="below-1000">Below 1000</label>
+
+                    </div>
+                </li>
+                <li class="mb-3">
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                        <input type="checkbox" class="custom-control-input" id= "1000-2000" name="1000_to_2000" value="1000-2000" {% if request.GET.1000_to_2000 == '1000-2000' %} checked {% endif %}>
+                        <label class="custom-control-label" for="1000-2000">1000 - 2000</label>
+                    </div>
+                </li>
+                <li class="mb-3">
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                        <input type="checkbox" class="custom-control-input" id="2000-3000" name="2000_to_3000" value="2000-3000"{% if request.GET.2000_to_3000 == '2000-3000' %} checked {% endif %} >
+                        <label class="custom-control-label" for="2000-3000">2000- 3000</label>
+                    </div>
+                </li>
+                <li class="mb-3">
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                        <input type="checkbox" class="custom-control-input" id="3000-4000" name="3000_to_4000" value="3000-4000"{% if request.GET.3000_to_4000 == '3000-4000' %} checked {% endif %} >
+                        <label class="custom-control-label" for="3000-4000">3000- 4000</label>
+                    </div>
+                </li>
+                <li class="mb-3">
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                        <input type="checkbox" class="custom-control-input" id="4000-5000" name="4000_to_5000" value="4000-5000"{% if request.GET.4000_to_5000 == '4000-5000' %} checked {% endif %} >
+                        <label class="custom-control-label" for="4000-5000">5000 - 10000</label>
+                    </div>
+                </li>
+            </ul> 
+        </div>
+    </form>
+</div>
+
+
+<!-- Shop Sidebar End -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+                // Check if the checkbox is checked and add/remove the active class
+                if (checkbox.checked) {
+                    checkbox.parentElement.classList.add('active');
+                } else {
+                    checkbox.parentElement.classList.remove('active');
+                }
+            });
+            // Check if the checkbox is checked initially and add the active class
+            if (checkbox.checked) {
+                checkbox.parentElement.classList.add('active');
+            }
+        });
+    });
+</script>

@@ -1,0 +1,108 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Variants</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href={% url "admin_home" %}>Home</a></li>      
+            </ol>
+        </nav>
+        <div class="text-end mb-3">
+            <a href="{% url 'add_product_attribute' %}" class="btn btn-primary ">Add Attribute</a>
+        </div>
+    </div><!-- End Page Title -->
+    {% include "alerts.html" %}
+    <section class="section">    
+        <div class="row">        
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ variants_count }} items found</h5>
+                        <!-- Table with stripped rows -->
+                        <table class="table ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Products</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Color</th>
+                                    <th scope="col">Size</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Availability</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for variant in variants %}
+                                    <tr>                       
+                                        <td style="position: relative;">{{ variant.product }}</td>
+                                        <td>{{ variant.price }}</td>
+                                        {% if variant.stock > 0 %}
+                                        <td>{{ variant.stock }}</td>
+                                        {% else %}
+                                        <td><p class="text-danger">Out of Stock</p></td>
+                                        {% endif %}
+                                        <td>{{ variant.color }}</td>
+                                        <td>{{ variant.size }}</td>
+                                        <td><img src="{{ variant.image.url }}"style="width:100px" alt="Image"></td>
+                                        <td>
+                                            {% if  variant.is_available %}
+                                                <button  class="btn text-success">&#x2705;</button>
+                                            {% else %}
+                                                <button  class="btn text-danger" >&#x274C;</button>
+                                            {% endif %}
+                                        </td>                                    
+                                        <td> 
+                                            <div class="d-flex ">
+                                                <a href="{% url "edit_variation" variant.id %}" role="button" style="margin-right: 10px;"><i class="bi bi-pencil-square" style="font-size: 20px;"></i></a>
+                                                <form method="post" action="{% url 'delete_variant' variant.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" style="color: red; background-color: transparent; border: none;"><i class="bi bi-trash" style="font-size: 20px;"></i></button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}                              
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- paginator -->
+        <div class="col-12 pb-1">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mb-3">
+                    {% if variants.has_previous %}                                   
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ variants.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                    {% endif %}   
+                    {% for num in variants.paginator.page_range %}
+                        <li class="page-item {% if num == variants.number %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endfor %}   
+                    {% if variants.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ variants.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>                              
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>                   
+        <!-- end paginator -->
+    </section>
+</main>
+{% endblock content %}

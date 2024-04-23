@@ -1,0 +1,56 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+  <div class="pagetitle">
+      <h1>Add Category</h1>
+      <nav>
+          <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'admin_category_list' %}">Category List</a></li>      
+          </ol>
+      </nav>
+  </div><!-- End Page Title -->
+  {% include "alerts.html" %}
+  <div class="container mt-4">
+    <form method="post" enctype="multipart/form-data" action="{% url 'add_category' %}">
+        {% csrf_token %}
+        
+        <!-- Category Name -->
+        <div class="mb-3 row">
+          <label for="{{ form.category_name.id_for_label }}" class="col-sm-2 col-form-label">Category Name</label>
+          <div class="col-sm-4">
+            {{ form.category_name }}
+          </div>
+        </div>
+    
+        <!-- Description -->
+        <div class="mb-3 row">
+          <label for="{{ form.description.id_for_label }}" class="col-sm-2 col-form-label">Description</label>
+          <div class="col-sm-4">
+            {{ form.description }}
+          </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="mb-3 row">
+          <label for="{{ form.image.id_for_label }}" class="col-sm-2 col-form-label">Image</label>
+          <div class="col-sm-4">
+            {{ form.image }}
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mb-3 row ">
+          <div class="col-md-6 text-end">
+              <button type="submit" class="btn btn-primary ">Add Category</button>
+          </div>
+          <div class="col-md-6">
+          </div>
+      </div>
+
+        
+    </form>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends "admin_panel/base.html" %}
+{% block content %}
+<main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Order Detail</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Home</a></li>
+          <li class="breadcrumb-item active">Orders</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+  
+    <section class="section">    
+        <div class="row">        
+          <div class="col-lg-12">
+            {% include "alerts.html" %}
+            <br>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Hoverable Table rows -->
+    <div class="card py-3 mb-4">
+        <h5 class="card-header">Ordered Products</h5>
+        <div class="table-responsive text-nowrap p-3">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product Image</th>
+                        <th>Product Name</th>
+                        <th>Size</th>
+                        <th>Color</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for order_product in order_products %}
+                    <tr>
+                        <td><img src="{{ order_product.product_attribute.image.url }}" alt="{{ order_product.product.name }}" width="100"></td>
+                        <td>{{ order_product.product_attribute.product }}</td>
+                        <td>{{ order_product.product_attribute.size }}</td>
+                        <td>{{ order_product.product_attribute.color }}</td>
+                        <td>{{ order_product.quantity }}</td>
+                        <td>₹ {{ order_product.product_price }}</td>  <!--Offer Discount-->
+                        <td>₹ {{order_product.total}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card py-3 mb-4">
+        <h5 class="card-header">Total Amount Summary</h5>
+        <div class="table-responsive p-3">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Subtotal</th>
+                        <th>Coupon</th>
+                        <th>Tax</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    <tr>
+                        <td>{{ subtotal }}</td>
+                        <td>{{ order.coupon.discount }}</td>
+                        <td>{{ order.tax }}</td>
+                        <td>{{ order.order_total }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+
+    <div class="card py-3 mb-4">
+        <h5 class="card-header">Ordered Address</h5>
+        <div class="table-responsive text-nowrap p-3">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                      <th>Full Name</th>
+                      <th>Full Address</th>
+                      <th>Mobile</th>
+                    </tr>
+                  </thead>
+                <tbody class="table-border-bottom-0">
+                    <tr>
+                        <td> <strong>{{ order.user.full_name }}</strong></td>
+                        <td>
+                            <p>{{ order.shipping_address }}</p>
+                            <p>Pin Code: {{ order.shipping_address.postal_code }}</p>
+                            
+                        </td>
+                        <td>{{ order.user.userprofile.phone }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card py-3 mb-4">
+        {% if order.status == 'Cancelled' %}
+            <h5 class="card-header"></h5>
+            <div class="table-responsive text-nowrap p-3">
+                <p>Order is Cancelled</p>
+                <p>Reason: {{order.cancellation_reason}}</p>
+        {% elif order.status == 'Returned' %}
+            <h5 class="card-header"></h5>
+            <div class="table-responsive text-nowrap p-3">
+                <p>Order is Returned</p>
+                <p>Reason: {{order.return_reason}}</p>
+        {% else %}
+            <h5 class="card-header">Payment Details</h5>
+            <div class="table-responsive text-nowrap p-3">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Payment Method</th>
+                            <th>Total Amount </th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        <tr>
+                            <td>{{ payment.payment_method }}</td>
+                            <td>₹{{ payment.amount_paid }}</td>
+                            <td>{{ payment.status }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+
+    <!--/ Hoverable Table rows -->
+</div>
+        <div class="col-12 pb-1">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mb-3">
+                    {% if orders.has_previous %}                                   
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ orders.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                    {% endif %}   
+                    {% for num in orders.paginator.page_range %}
+                        <li class="page-item {% if num == orders.number %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endfor %}   
+                    {% if orders.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ orders.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>                              
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>                   
+        <!--   end paginator    -->
+    </section>
+    </main>
+      {% endblock content %}

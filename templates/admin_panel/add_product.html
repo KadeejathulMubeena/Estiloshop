@@ -1,0 +1,97 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+{% block content %}
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Add Product</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_product_list' %}">Product List</a></li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    {% include "alerts.html" %}
+
+    <section class="section">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="product-container">
+                    <!-- Horizontal Form -->
+                    <form method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Product Name -->
+                        <div class="mb-3 row">
+                            <label for="name" class="col-sm-2 col-form-label">Product Name</label>
+                            <div class="col-md-8 add_product">
+                                {{ form.name }}
+                            </div>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="mb-3 row">
+                            <label for="{{ form.category_id.id_for_label }}" class="col-sm-2 col-form-label">Category:</label>
+                            <div class="col-md-8 add_product">
+                                {{ form.category }}
+                            </div>
+                        </div>
+
+                        <!-- Brand -->
+                        <div class="mb-3 row">
+                            <label for="{{ form.brand_id.id_for_label }}" class="col-sm-2 col-form-label">Brand:</label>
+                            <div class="col-md-8 add_product">
+                                {{ form.brand }}
+                            </div>
+                        </div>
+                        
+                        <!-- Description -->
+                        <div class="mb-3 row">
+                            <label for="description" class="col-sm-2 col-form-label">Description</label>
+                            <div class="col-md-8 add_product">
+                                {{ form.description }}
+                            </div>
+                        </div>
+
+                        <!-- Product Material -->
+                        <div class="mb-3 row">
+                            <label for="material" class="col-sm-2 col-form-label">Product Material</label>
+                            <div class="col-md-8 add_product">
+                                {{ form.material }}
+                            </div>
+                        </div>
+
+                        <!-- Availability -->
+                        <div class="mb-4 row">
+                            <div class="col-md-8 form-check">
+                                {{ form.is_available }}
+                                <label for="{{ form.is_available.id_for_label }}" class="form-check-label">Available</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="mb-3 row ">
+                            <div class="col-md-6 ">
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary ">Add Product</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<style>
+    /* Custom CSS for increased width of all input fields */
+    .col-md-8.add_product input[type="text"],
+    .col-md-8.add_product select,
+    .col-md-8.add_product textarea,
+    .col-md-8.add_product input[type="text"].form-control {
+        width: 75%; /* Adjust the width as needed */
+    }
+</style>
+
+{% endblock content %}

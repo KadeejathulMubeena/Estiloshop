@@ -1,0 +1,28 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+  <div class="container mt-4">
+    <h2 class="text-primary mb-4">Edit Product Image</h2>
+    {% include "alerts.html" %}
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <form method="post" action="{% url 'edit_product_image' product_image.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Display the existing image -->
+            <img src="{{ product_image.image.url }}" alt="Product Image" style="width: 100px; height: auto;">
+        
+            <!-- Allow updating the existing image -->
+            <input type="file" name="images" accept="image/*">
+        
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+        
+      </div>
+    </div>
+
+   
+  </div>
+</main>
+{% endblock %}

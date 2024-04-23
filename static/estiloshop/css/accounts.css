@@ -1,0 +1,12 @@
+.navbar-vertical .navbar-nav .nav-item.dropdown {
+    position: relative;
+}
+
+.navbar-vertical .navbar-nav .nav-item.dropdown .dropdown-menu {
+    position: absolute;
+    top: 100%; /* Position the dropdown below the parent */
+    left: 0;
+    z-index: 1000; /* Adjust the z-index as needed */
+    margin-top: 10px; /* Adjust the margin as needed */
+
+}

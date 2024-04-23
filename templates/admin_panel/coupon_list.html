@@ -1,0 +1,78 @@
+<!-- coupon_list.html -->
+{% extends "admin_panel/base.html" %}
+{% load static %}
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Coupon List</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href={% url "admin_home" %}>Home</a></li>      
+        </ol>
+      </nav>
+      <div class="text-end mb-3">
+        <a href="{% url 'add_coupon' %}" class="btn btn-primary ">Add Coupon</a>
+      </div>
+    </div><!-- End Page Title -->
+  {% include "alerts.html" %}
+<section class="section">    
+    <div class="row">        
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{coupon_count}} Coupons found</h5>
+            <!-- Table with stripped rows -->
+            <table class="table ">
+                <thead>
+                  <tr>
+                    <th>Coupon Code</th>
+                    <th>Discount</th>
+                    <th>Valid To</th>
+                    <th>Max Usage</th>
+                    <th>Used Count</th>
+                    <th>Minimum Amount</th>
+                    <th>Active</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for coupon in coupons  %}
+                        <tr>                      
+                        <td>{{ coupon.coupon_code }}</td>
+                        <td>RS {{ coupon.discount }}</td>
+                        <td>{{ coupon.expiration_date }}</td>
+                        <td>{{ coupon.max_usage }}</td>
+                        <td>{{ coupon.used_count }}</td>
+                        <td>Rs {{ coupon.minimum_amount }}</td>
+                        <td>
+                          {% if not coupon.active %}
+                              <form method="post" action="{% url 'list_coupon' coupon.id %}">
+                                  {% csrf_token %}
+                                  <button type="submit" class="btn text-danger">&#x274C;</button>
+                              </form>
+                          {% else %}
+                              <form method="post" action="{% url 'unlist_coupon' coupon.id %}">
+                                  {% csrf_token %}
+                                  <button type="submit" class="btn text-success" >&#x2705;</button>
+                              </form>
+                          {% endif %}
+                      </td>
+                      <td>
+                        <form method="post" action="{% url 'delete_coupon' coupon.id %}">
+                          {% csrf_token %}
+                          <button type="submit" style="color: red; background-color: transparent; border: none;"><i class="bi bi-trash" style="font-size: 20px;"></i></button>
+                      </form>
+                      </td>
+                      </tr>
+                    {% endfor %}                              
+                </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock content %}

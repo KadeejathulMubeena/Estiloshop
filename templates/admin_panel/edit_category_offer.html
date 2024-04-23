@@ -1,0 +1,72 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+
+  <div class="pagetitle">
+    <h1>Edit Category Offer</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'category_offer_list' %}">Category Offer List</a></li>
+        </ol>
+    </nav>
+  </div>
+  {% include "alerts.html" %}
+  <div class="container mt-4">
+                      <form method="post"  action="{% url 'edit_category_offer' cat_offer.id %}">
+                          {% csrf_token %}
+                          
+                          <!-- Category -->
+                          <div class="mb-3 row">
+                            <label for="category" class="col-sm-3 col-form-label">Category</label>
+                            <div class="col-sm-5">
+                              {{ form.category }}
+                            </div>
+                          </div>
+                          
+                          <!-- Name -->
+                          <div class="mb-3 row">
+                              <label for="offer_name" class="col-sm-3 col-form-label">Name</label>
+                              <div class="col-sm-5">
+                                {{ form.name }}
+                              </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="mb-3 row">
+                              <label for="offer_description" class="col-sm-3 col-form-label">Description</label>
+                              <div class="col-sm-5">
+                                {{ form.description }}
+                              </div>
+                            </div>
+                            
+                            <!-- Discount Percentage -->
+                            <div class="mb-3 row">
+                              <label for="discount_percentage" class="col-sm-3 col-form-label">Discount Percentage</label>
+                              <div class="col-sm-5">
+                                {{ form.discount_percentage }}
+                              </div>
+                            </div>
+                            
+                            <!-- End Date -->
+                            <div class="mb-3 row">
+                              <label for="end_date" class="col-sm-3 col-form-label">End Date</label>
+                              <div class="col-sm-5">
+                                {{ form.end_date }}
+                              </div>
+                          </div>
+                          
+                          <!-- Submit Button -->
+                          <div class="mb-3 row ">
+                            <div class="col-md-6 ">
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary ">Edit Category Offer</button>
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+            
+  </main> 
+{% endblock %}

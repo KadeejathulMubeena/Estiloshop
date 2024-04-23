@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+  <!-- Page Header Start -->
+  <div class="container-fluid bg-secondary mb-5">
+	<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 120px">
+		<h1 class="font-weight-semi-bold text-uppercase mb-3">Dashboard</h1>
+		<div class="d-inline-flex">
+			<p class="m-0"><a href="{% url "home" %}">Home</a></p>
+			<p class="m-0 px-2">-</p>
+			<p class="m-0">Dashboard</p>
+		</div>
+	</div>
+</div>
+<!-- Page Header End -->
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+<div class="container-fluid ">
+	<div class="row">
+	<aside class="col-md-3">
+		{% include "accounts/sidebar.html" %}
+	</aside>
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Order History </strong>
+		</header>
+		<div class="card-body">
+			<div class="row"> 
+				<div class="col-md-12">
+					<table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col">Order #</th>
+                            <th scope="col">Billing Name</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Order Total</th>
+							<th scope="col">Order Status</th>
+							<th scope="col">Payment Status</th>
+                            <th scope="col">Date</th>
+							{% if order.status == 'Cancelled' %}
+							<th scope="col">Action</th>
+							{% endif %}
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                          <tr>
+                            <th scope="row"><a href="{% url "order_detail" order.order_number %}" >{{order.order_number}}</a></th>
+                            <td>{{user.full_name}}</td>
+                            <td>{{user.userprofile.phone}}</td>
+                            <td>Rs {{order.order_total}}</td>
+							<td>{{order.status}}</td>
+							<td>{{order.payment.status}}</td>
+                            <td>{{order.created_at|date:"d/m/Y"}}</td>
+							
+							<td>
+								{% if order.status != 'Cancelled' and order.status != 'Delivered' and order.payment.status != '' %}
+								<a href="{% url "cancel_order_confirmation" order.id %}" type="btn btn-primary" >Cancel</a>
+								{% endif %}
+								{% if order.status == 'Delivered' %}
+									<a href="{% url 'return_order' order.id %}" class="btn btn-primary">Return</a>
+								{% endif %}
+							</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+				</div>
+				
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+		<div class="table-responsive">
+		
+		</div> <!-- table-responsive .end// -->
+		</article> <!-- order-group.// --> 
+	</main>
+</div> <!-- row.// -->
+</div>
+
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+{% endblock content %}

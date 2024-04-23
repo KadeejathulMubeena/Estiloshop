@@ -1,0 +1,80 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+    
+    <div class="pagetitle">
+        <h1>Size and Color</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'user_list' %}">Home</a></li>      
+            </ol>
+        </nav>
+        <div class="text-end mb-2">
+            <a href="{% url 'add_size' %}">Add Size</a>
+        </div>
+        <div class="text-end mb-2">
+        <a href="{% url 'add_color' %}">Add Color</a>
+        </div>
+    </div><!-- End Page Title -->
+    {% include "alerts.html" %}
+    <section class="section">    
+        <div class="row">        
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Sizes</h5>
+                        <!-- Table to display sizes -->
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Size</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for size in sizes %}
+                                    <tr>
+                                        <td>{{ size.title }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- End Sizes Table -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Colors</h5>
+                        <!-- Table to display colors with color codes as background -->
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Color Title</th>
+                                    <th>Color </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for color in colors %}
+                                    <tr>
+                                        <td>{{ color.title }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div style="border: 1px solid black; width: 40px; height: 20px; background-color: {{ color.color_code }};"></div>
+                                                <span style="margin-left: 10px;">{{ color.color_code }}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- End Colors Table -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock content %}

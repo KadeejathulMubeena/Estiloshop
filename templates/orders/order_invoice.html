@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title itemprop="name">Order Invoice</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        /* Reset default margin and padding */
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Define A4 paper size */
+        @media print {
+            @page {
+                size: A4;
+                margin: 20mm; /* Adjust margins as needed */
+            }
+    
+            body {
+                font-family: Arial, sans-serif;
+                background: #fff;
+                margin: 0;
+                padding: 0;
+            }
+    
+            .invoice-container {
+                width: 100%;
+                max-width: 100%;
+                
+            }
+    
+            /* Adjust styles for printing */
+            .invoice-title h2 {
+                margin-top: 0;
+                line-height: 1em;
+            }
+    
+            .invoice-addresses {
+                display: flex;
+                justify-content: space-between;
+            }
+    
+            .invoice-addresses .address {
+                width: 48%;
+            }
+    
+            .invoice-details {
+                display: flex;
+                justify-content: space-between;
+            }
+    
+            .invoice-details .payment-method {
+                width: 48%;
+            }
+    
+            .invoice-summary {
+                margin-top: 20px;
+            }
+    
+            .invoice-summary table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+    
+            .invoice-summary th,
+            .invoice-summary td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+    
+            /* Button styles */
+            #pdfButton {
+                display: none; /* Hide the button in print view */
+            }
+        }
+
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            margin: 20mm; 
+        }
+
+        
+
+        /* The invoice grid */
+        .invoice {
+            background: #fff;
+            color: #666666;
+            border-radius: 2px;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px; /* Adjust padding as needed */
+        }
+
+        /* Header styles */
+        .invoice h2 {
+            margin-top: 0;
+            line-height: 1em;
+        }
+
+        /* Address styles */
+        .invoice address {
+            font-size: 1em;
+            font-weight: 300;
+        }
+
+        /* Table styles */
+        .invoice table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .invoice table th,
+        .invoice table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Button styles */
+        #pdfButton {
+            border-radius: 20px;
+            color: #212529;
+            background-color: #D19C97;
+            border-color: #D19C97;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px; 
+        }
+        #pdfButton:hover {
+            background-color: #c17a74;
+            color: white;
+        }
+
+        @media screen {
+            .invoice-container {
+                width: 100%;
+                margin: 0 auto; /* Center the content */
+                padding: 20px;
+                border: 1px solid #ddd; /* Add border for visual separation */
+                box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1); /* Add shadow for visual effect */
+            }
+    
+            .invoice-title h2 {
+                margin-bottom: 20px;
+            }
+    
+            .address {
+                margin-bottom: 20px;
+            }
+    
+            .payment-method {
+                margin-bottom: 20px;
+            }
+    
+            .invoice-summary {
+                margin-top: 40px;
+            }
+            .container {
+                width: 70%;
+            }
+        }
+
+    </style>
+    </head>
+    <body>
+        <div class="container ">                
+            <div class="invoice-container ">
+            <div class="row justify-content-center">
+                <div class="col-xs-12">
+                    <div class="grid invoice">
+                        <div class="grid-body">
+                            <div class="invoice-title">
+                                <br>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h2>
+                                            Invoice<br>
+                                            <span class="small">Order No: {{order.order_number}} </span>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <address>
+                                        <strong>From:</strong>
+                                        <br>
+                                        Estilo<br>
+                                        Industrial Area, kotikulam, bekal(P.O),<br>
+                                        Kasaragod(Dist), Kerala.<br>
+                                        <abbr title="Phone">Phone:</abbr>
+                                        +91 7808915383
+                                    </address>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <address>
+                                        <strong>Shipped To:</strong>
+                                        <br>
+                                        {{order.user.full_name}}<br>
+                                        {{order.shipping_address.address_line_1}}<br>
+                                        {% if order.shipping_address.address_line_2 %}
+                                        {{order.shipping_address.address_line_2}}<br>
+                                        {% endif %}
+                                        {{order.shipping_address.district}}<br>
+                                        {{order.shipping_address.state}}<br>
+                                        {{order.shipping_address.country}}<br>
+                                        Pincode : {{order.shipping_address.postal_code}}<br>
+                                        Phone: {{order.user.userprofile.phone}}<br>
+                                    </address>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <address>
+                                        <strong>Payment Method:</strong>
+                                        <br>
+                                        {{order.payment.payment_method}}<br>
+                                        <br>
+                                    </address>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <address>
+                                        <strong>Order Date:</strong>
+                                        <br>{{ order.created_at|date:"d/m/Y" }}
+                                    </address>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>ORDER SUMMARY</h3>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr class="line">
+                                                <th class="text-left">
+                                                    <strong>Products</strong>
+                                                </th>
+                                                <th class="text-right">
+                                                    <strong>Size</strong>
+                                                </th>
+                                                <th class="text-right">
+                                                    <strong>Color</strong>
+                                                </th>
+                                                <th class="text-right">
+                                                    <strong>Quantity</strong>
+                                                </th>
+                                                <th class="text-right">
+                                                    <strong>Price</strong>
+                                                </th>
+                                                <th class="text-right">
+                                                    <strong>Total</strong>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for order_item in ordered_products %}
+                                            <tr>
+                                                <td>
+                                                    <strong>{{ order_item.product_attribute.product }}</strong>
+                                                </td>
+                                                <td class="text-right">{{ order_item.product_attribute.size }}</td>
+                                                <td class="text-right">{{ order_item.product_attribute.color }}</td>
+                                                <td class="text-right">{{ order_item.quantity }}</td>
+                                                <td class="text-right">₹{{ order_item.product_price }}</td>
+                                                <td class="text-right">₹{{ order_item.total_item }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td class="text-right">
+                                                    <strong>Sub Total</strong>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong>₹{{ subtotal }}</strong>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td class="text-right">
+                                                    <strong>GST</strong>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong>₹{{order.tax}}</strong>
+                                                </td>
+                                            </tr>
+                                            {% if discount %}
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td class="text-right">
+                                                    <strong>Discount</strong>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong>-₹{{ discount }} </strong> 
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td class="text-right">
+                                                    <strong>Grand Total</strong>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong>₹{{ order.order_total }}</strong>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 text-right identity">
+                <button id="pdfButton">
+                    Download Invoice
+                </button>
+            </div>
+        </div>
+    </body>
+    </html>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+    <script>
+        document.getElementById("pdfButton").addEventListener("click", function () {
+            const invoiceContainer = document.querySelector(".invoice-container");
+            const pdfOptions = {
+                filename: 'invoice.pdf',
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().from(invoiceContainer).set(pdfOptions).save();
+        });
+        
+    </script>
+</body>
+</html>

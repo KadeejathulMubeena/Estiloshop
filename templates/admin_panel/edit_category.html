@@ -1,0 +1,61 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+    <div class="pagetitle">
+        <h1>Edit Category</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_category_list' %}">Category List</a></li>      
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    {% include "alerts.html" %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-sm-6">
+                <form method="post" enctype="multipart/form-data" action="{% url 'edit_category' category.id %}">
+                    {% csrf_token %}
+                    <!-- Category Name -->
+                    <div class="mb-3 row">
+                        <label for="{{ form.category_name.id_for_label }}" class="col-sm-3 col-form-label">Category Name:</label>
+                        <div class="col-sm-9">
+                            {{ form.category_name }}
+                        </div>
+                    </div>
+                
+                    <!-- Description -->
+                    <div class="mb-3 row">
+                        <label for="{{ form.description.id_for_label }}" class="col-sm-3 col-form-label">Description:</label>
+                        <div class="col-sm-9">
+                            {{ form.description }}
+                        </div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="mb-3 row">
+                        <label for="{{ form.image.id_for_label }}" class="col-sm-3 col-form-label">Image:</label>
+                        <div class="col-sm-9">
+                            {{ form.image }}
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="mb-3 row">
+                        <div class="col-sm-12 text-end">
+                            <button type="submit" class="btn btn-primary">Edit Category</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6">
+                <!-- Image -->
+                <div class="text-center mt-2">
+                    <img src="{{ category.image.url }}" alt="Category Image" class="img-thumbnail " style="height:250px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

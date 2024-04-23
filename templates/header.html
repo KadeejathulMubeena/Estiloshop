@@ -1,0 +1,126 @@
+{% load static %}
+ <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row bg-secondary py-2 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark" href="">FAQs</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Help</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Support</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a class="text-dark pl-2" href="">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a href="" class="text-decoration-none">
+                    <h1 class="m-0 display-5 font-weight-semi-bold">
+                        <img class="img-fluid" src="{% static 'estiloshop/img/logo.png' %}" alt="Image" style="max-width: 150px; max-height: 80px;">
+                    </h1>
+                 </a>
+            </div>
+            <div class="col-lg-6 col-6 text-left">
+                <form action="{% url "search" %}" method="GET">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products" name="keyword">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+            <div class="col-lg-3 col-6 text-right">
+                <a href="{% url "wishlist" %}" class="btn border">
+                    <i class="fas fa-heart text-primary"></i>
+                    <span class="badge">{{wishlist_count}}</span>
+                </a>
+                <a href="{% url "cart" %}" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="badge">{{cart_count}}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <!-- Navbar Start -->
+    <section class="header-main border-bottom">
+        <div class="container-fluid mb-2">
+            <div class="row border-top px-xl-5">
+                <!-- Navbar End -->
+                <!-- Your existing code -->
+                <div class="col-lg-3 col-sm-3 col-md-3 col-6 flex-grow-0">
+                    <div class="container-wrap custom-dropdown d-inline-block float-right">
+                        <button type="button" class="btn btn-primary dropdown-toggle" style="width: 320px;" data-toggle="dropdown">Categories</button>
+                        <div class="dropdown-menu" style="width: 320px;">
+                            <a href="{% url 'shop' %}" class="dropdown-item category">All Products</a>
+                            {% for category in links %}
+                            <a href="{{ category.get_url }}" class="dropdown-item category">{{ category.category_name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>       
+                <!-- Navbar End -->
+                <div class="col-lg-9 "> <!-- Increased width to 9 columns -->
+                    <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0" >
+                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse ml-5" id="navbarCollapse">
+                            <div class="navbar-nav mr-auto py-0">
+                                <a href="{% url 'home' %}" class="nav-item nav-link ml-5 {% if '/' == request.path %} active {% endif %} " >Home</a>
+                                <a href="{% url 'shop' %}" class="nav-item nav-link ml-5 {% if 'shop/' in request.path %} active {% endif %}">Shop</a>
+                            </div>                           
+                            <div class="navbar-nav ml-auto py-0 "> <!-- Moved ml-auto here -->
+                                {% if user.id %}
+                                {% if user.is_active %}
+                                <div class="justify-content-end">
+                                    <p class="nav-item  ">{{ user.username }}</p>
+                                    </div>
+                                <a href="{% url "dashboard" %}" class="nav-item nav-link mr-2 {% if '/accounts/' in request.path %} active {% endif %} ">Dashboard</a>
+                                <a href="{% url 'logout' %}" class="nav-item nav-link {% if 'logout/' in request.path %} active {% endif %}">Logout</a>
+                                {% else %}
+                                <a href="{% url 'register' %}" class="nav-item nav-link mr-2 {% if 'register/' in request.path %} active {% endif %}">Register</a>
+                                <a href="{% url 'login' %}" class="nav-item nav-link {% if 'login/' in request.path %} active {% endif %}">Login</a>
+                                {% endif %}
+                                {% else %}
+                                <a href="{% url 'register' %}" class="nav-item nav-link mr-2 {% if 'register/' in request.path %} active {% endif %}">Register</a>
+                                <a href="{% url 'login' %}" class="nav-item nav-link {% if 'login/' in request.path %} active {% endif %} ">Login</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </nav>
+                    
+                </div>
+            </div>
+        </div>
+        
+    <!-- Navbar End -->
+    </section>
+    

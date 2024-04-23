@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <!-- Page Header Start -->
+     <div class="container-fluid bg-secondary ">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-2">Shopping Cart</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Shopping Cart</p>
+            </div>
+        </div>
+    </div> 
+    <!-- Page Header End -->
+    
+    <!-- Cart Start -->
+    {% include "alerts.html" %}    
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">    
+            <div class="col-lg-8 table-responsive mb-5">
+                {% if not cart_items %}
+                    <h2 class="text-center">Your Shopping Cart is Empty</h2>
+                    <br>
+                    <div class="text-center">
+                        <a href="{% url "shop" %}" class="btn btn-primary">Continue Shopping</a>
+                    </div>
+                {% else %}
+                <table class="table table-bordered text-center mb-0">
+                    <thead class="bg-secondary text-dark">
+                        <tr>
+                            <th>Products</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle">
+                        {% for cart_item in cart_items %}
+                        {% if cart_item.product_attribute.stock > 0 %}
+                        <tr>
+                            <td class="text-center">
+                                <div >
+                                    <img src="{{ cart_item.product_attribute.image.url }}" alt="{{ cart_item.product_attribute.product }}" style="width: 50px;" class="mr-3">
+                                    <a href="{{ cart_item.product_attribute.product.get_url }}"> {{ cart_item.product_attribute.product }} </a>
+                                </div>
+                                <div class="ml-5 mb-2" >       
+                                    <p class="text-muted small mb-2">Size: {{cart_item.product_attribute.size | capfirst}}</p>                 
+                                    <p class="text-muted small mb-2">Color: {{cart_item.product_attribute.color | capfirst}}</p>
+                                    {% if cart_item.product_attribute.stock > 0 %}
+                                        {% if cart_item.product_attribute.stock  < 6 %}
+                                            <p class="text-danger small mb-0">Only {{ cart_item.product_attribute.stock  }} stock left</p>
+                                        {% else %}
+                                            <p class="text-success small mb-0"> In stock</p>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </td>      
+                            {% if cart_item.product_attribute.offer_price %}                   
+                            <td class="align-middle">Rs {{cart_item.product_attribute.offer_price}}</td>
+                            {% else %}
+                            <td class="align-middle">Rs {{cart_item.product_attribute.price}}</td>
+                            {% endif %} 
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <a href="{% url "remove_cart" cart_item.product_attribute.id cart_item.id  %}" class="btn btn-sm btn-primary btn-minus">
+                                            <i class="fa fa-minus"></i>
+                                        </a>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value="{{ cart_item.quantity }}">
+                                    <div class="input-group-btn">            
+                                        <a href="{% url "increase_quantity" cart_item.id  %}" class="btn btn-sm btn-primary btn-plus">
+                                            <i class="fa fa-plus"></i>
+                                        </a>                                                        
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">{{cart_item.sub_total}}</td>
+                            <td class="align-middle"><a href="{% url "remove_cart_item" cart_item.product_attribute.id cart_item.id %}" onclick="return confirm('Are you sure You want to delete this item?')" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td>
+                        </tr> 
+                        {% endif %}
+                        {% endfor %}                
+                    </tbody>
+                </table>
+                <div class="text-center mt-4">
+                    <a href="{% url "shop" %}" class="btn btn-primary">Continue Shopping</a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3 pt-1">
+                            <h6 class="font-weight-medium">Subtotal</h6>
+                            <h6 class="font-weight-medium">Rs {{total}}</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Tax</h6>
+                            <h6 class="font-weight-medium">Rs {{tax}}</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Total</h5>
+                            <h5 class="font-weight-bold">Rs {{grand_total}}</h5>
+                        </div>
+                        <a href="{% url "checkout" %}" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</a>
+                    </div>
+                </div>
+            </div>
+
+            <!--cart end-->
+        </div>
+    </div>
+
+    <!-- Cart End -->  
+
+    {% endblock content %}

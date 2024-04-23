@@ -1,0 +1,73 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block content %}
+<main id='main' class='main'>
+    <div class="pagetitle">
+        <h1>Add Product Attribute</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'variation_list' %}">Attribute List</a></li>      
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    {% include "alerts.html" %}
+    <div class="container mt-4">
+        <form method="post" action="{% url 'add_product_attribute' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3 row">
+                <label for="id_product" class="col-sm-2 col-form-label">Product</label>
+                <div class="col-sm-5">
+                    {{ form.product }}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="id_color" class="col-sm-2 col-form-label">Color</label>
+                <div class="col-sm-5">
+                    {{ form.color }}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="id_size" class="col-sm-2 col-form-label">Size</label>
+                <div class="col-sm-5">
+                    {{ form.size }}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="id_image" class="col-sm-2 col-form-label">Image</label>
+                <div class="col-sm-5">
+                    {{ form.image }}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="id_price" class="col-sm-2 col-form-label">Price</label>
+                <div class="col-sm-5">
+                    {{ form.price }}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="id_stock" class="col-sm-2 col-form-label">Stock</label>
+                <div class="col-sm-5">
+                    {{ form.stock }}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="id_is_available" class="col-sm-2 col-form-label">Is Available</label>
+                <div class="col-sm-5">
+                    {{ form.is_available }}
+                </div>
+            </div>
+            <div class="mb-3 row ">
+                <div class="col-md-6 ">
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary ">Add Product Attribute</button>
+                </div>
+            </div>   
+            </form>
+        <div style="margin-top: 20px;">
+            <a href="{% url 'size_color' %}" >Back to Size and Color List</a>
+        </div>
+    </div>
+</main>
+{% endblock content %}
