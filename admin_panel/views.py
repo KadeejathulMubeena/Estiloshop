@@ -30,7 +30,6 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.template.loader import get_template
 from io import BytesIO
-from xhtml2pdf import pisa
 from datetime import date
 
 
