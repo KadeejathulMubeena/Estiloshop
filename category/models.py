@@ -3,11 +3,6 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.utils import timezone
 
-
-def validate_image(file):
-    allowed_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.webp')
-    return file.name.lower().endswith(allowed_extensions)
-
 class Category(models.Model):
     category_name = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique=True)

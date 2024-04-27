@@ -7,32 +7,13 @@ from category.forms import CategoryForm,BrandForm,CategoryOfferForm
 from shop.forms import ProductForm, ProductAttributeForm, SizeForm, ColorForm,ProductOfferForm
 from accounts.models import Account
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
-from accounts.forms import RegistrationForm
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
-from django.core.mail import send_mail
-from django.conf import settings
-from .forms import EditUserForm
 from orders.forms import CouponForm
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.admin.views.decorators import staff_member_required
-import logging
 from django.utils import timezone
-from orders.models import OrderProduct,Payment,Wallet,Coupon,Order
+from orders.models import OrderProduct,Payment,Coupon,Order
 from datetime import datetime,timedelta
-from django.db.models import Sum,Count,F,Q,Case, When, Value, BooleanField
-from decimal import Decimal
-from django.http import HttpResponseForbidden
-from django.http import HttpResponse
-from django.template.loader import get_template
-from io import BytesIO
+from django.db.models import Sum,F
 from datetime import date
-
-
 
 # Decorator to check if the user is a superuser
 def superuser_required(view_func):
@@ -41,10 +22,6 @@ def superuser_required(view_func):
         login_url='/login', 
     )
     return actual_decorator(view_func)
-
-def validate_image(file):
-    allowed_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.webp')
-    return file.name.lower().endswith(allowed_extensions) 
 
 def show_sales_report(request):
     if request.method == 'POST':
@@ -82,7 +59,6 @@ def show_sales_report(request):
         'sales_count':sales_count,
         'ordered_amount':ordered_amount,
        
-
     }
     
     return render(request,'admin_panel/sales_report_pdf.html',context)
@@ -562,7 +538,6 @@ def add_size(request):
 
     return render(request, 'admin_panel/add_size.html', {'form': form})
 
-
 def add_color(request):
     if request.method == 'POST':
         form = ColorForm(request.POST)
@@ -611,8 +586,6 @@ def add_product_attribute(request):
                 return render(request, 'admin_panel/add_product_attribute.html', {'form': form})
             elif not product.is_available:
                 messages.error(request, f"The product '{product.name}' is not available right now.")
-
-            
             elif new_attribute.stock <= 0:
                     new_attribute.is_available = False
             new_attribute.save()
@@ -667,12 +640,9 @@ def edit_variation(request, variation_id):
                 messages.error(request,"This product attribute already exists.")
                 return render(request, 'admin_panel/edit_variation.html', {'form': form, 'variation': variation})
             elif not product.is_available:
-                messages.error(request, f"The product '{product.name}' is not available right now.")
-
-            
+                messages.error(request, f"The product '{product.name}' is not available right now.")          
             elif new_variation.stock <= 0:
-                    new_variation.is_available = False
-            
+                    new_variation.is_available = False       
             new_variation.save()
             return redirect('variation_list')
         else:

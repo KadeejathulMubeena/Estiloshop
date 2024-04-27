@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from shop.models import Product, ProductAttribute
 from .models import Cart, CartItem
 from django.contrib.auth.decorators import login_required
-from accounts.forms import AddressForm
 from accounts.models import Address
 from django.contrib import messages
 from orders.models import Coupon,UserCoupons

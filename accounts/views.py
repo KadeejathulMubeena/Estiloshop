@@ -14,9 +14,8 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from scarts.models import Cart, CartItem
 from scarts.views import _cart_id
-from orders.models import Order,Payment,OrderProduct,Wallet,WalletTransaction,Coupon
+from orders.models import Order,Payment,OrderProduct,Wallet,WalletTransaction
 from orders.forms import CancellationReasonForm
-from shop.models import ProductAttribute
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def register(request):

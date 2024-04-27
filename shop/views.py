@@ -1,16 +1,10 @@
 # views.py
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Product,ProductAttribute, Size, Color, ProductImage,Wishlist,ProductOffer
-from category.models import Category,Brand,CategoryOffer
+from .models import Product,ProductAttribute, Color, ProductImage,Wishlist
+from category.models import Category
 from django.core.paginator import Paginator
-from scarts.models import CartItem
-from scarts.views import _cart_id
-from django.db.models import Q , Count,Min,Max
+from django.db.models import Q 
 from django.http import JsonResponse
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from django.core import serializers
-from django.db.models import Subquery, OuterRef
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 

@@ -3,6 +3,8 @@ from .  import views
 urlpatterns = [
     path('',views.admin_home,name = "admin_home"),
     path('user_list/',views.user_list,name="user_list"),
+    path('admin/block_user/<int:user_id>/', views.block_user_admin, name='block_user'),
+    path('admin/unblock_user/<int:user_id>/', views.unblock_user_admin, name='unblock_user'),
 
     path('product_list/',views.product_list,name='admin_product_list'),
     path('edit_product/',views.edit_product,name='edit_product'),
@@ -14,8 +16,6 @@ urlpatterns = [
     path('add_category/',views.add_category,name="add_category"),
     path('admin_category_list/',views.admin_category_list,name='admin_category_list'),
     path('<int:id>/delete_category/',views.delete_category,name="delete_category"),
-    path('admin/block_user/<int:user_id>/', views.block_user_admin, name='block_user'),
-    path('admin/unblock_user/<int:user_id>/', views.unblock_user_admin, name='unblock_user'),
     path('admin/unlisted_category/<int:cat_id>/', views.unlisted_category, name='unlisted_category'),
     path('admin/listed_category/<int:cat_id>/', views.listed_category, name='listed_category'),
     
@@ -54,7 +54,6 @@ urlpatterns = [
     path('list_coupon/<int:coupon_id>/',views.list_coupon,name = "list_coupon"),
     path('delete_coupon/<int:coupon_id>/',views.delete_coupon,name="delete_coupon"),
 
-
     path('add_product_offer/',views.add_product_offer, name="add_product_offer"),
     path('product_offer_list/',views.product_offer_list, name="product_offer_list"),
     path('unlist_product_offer/<int:p_offer_id>/',views.unlist_product_offer,name = "unlist_product_offer"),
@@ -67,7 +66,6 @@ urlpatterns = [
     path('list_category_offer/<int:cat_id>/',views.list_category_offer,name = "list_category_offer"),
     path('edit_category_offer/<int:cat_offer_id>/',views.edit_category_offer,name="edit_category_offer"),
     
-
     path('show_sales_report/',views.show_sales_report,name="show_sales_report"),
 
 

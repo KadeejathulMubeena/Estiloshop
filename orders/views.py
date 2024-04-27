@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from scarts.models import CartItem
 from .forms import OrderForm
-from accounts.models import Address,Account
+from accounts.models import Address
 from .models import Order, Payment, OrderProduct,Wallet,WalletTransaction,Coupon,UserCoupons
 import datetime
 import logging
@@ -10,7 +10,6 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.db import transaction
-import razorpay
 from razorpay import Client
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -295,38 +294,6 @@ def place_order(request, total=0, quantity=0):
             return redirect('checkout')
     else:
         return redirect('checkout')
-
-
-def order_complete(request):
-    order = Order.objects.filter(user=request.user, is_ordered=True).order_by('-id').first()
-
-    if order:
-        payment = Payment.objects.get(id=order.payment.id)
-        ordered_products = OrderProduct.objects.filter(order=order)
-        
-        # Calculate subtotal, skipping products with zero stock
-        subtotal = sum(
-            product.product_price * product.quantity
-            for product in ordered_products
-            if product.product_attribute.stock > 0
-        )
-
-        coupon_discount = 0
-        if order.coupon:
-            coupon_discount = order.coupon.discount
-
-        context = {
-            'order': order,
-            'ordered_products': ordered_products,
-            'payment': payment,
-            'order_number': order.order_number,
-            'subtotal': subtotal,
-            'coupon_discount': coupon_discount,  
-        }
-    else:
-        context = {}  # Empty context if order is not found
-
-    return render(request, 'orders/order_complete.html', context)
 
 from django.http import Http404
 

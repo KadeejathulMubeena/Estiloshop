@@ -18,7 +18,7 @@ def home(request):
     products=Product.objects.filter(is_available=True).order_by('-created_date')[:9]
     brands=Brand.objects.annotate(product_count=Count('product')).order_by('-id')
     products_with_attributes = []  
-
+    
     for product in products:
         attributes = ProductAttribute.objects.filter(product=product)
         if attributes.exists():  # Check if the product has attributes
