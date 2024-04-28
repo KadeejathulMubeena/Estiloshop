@@ -43,4 +43,5 @@ tzdata==2024.1
 uritools==4.0.2
 urllib3==2.2.1
 webencodings==0.5.1
+whitenoise==6.6.0
 zopfli==0.2.3

@@ -23,7 +23,6 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home,name="home"),
-    # path('category/',include('category.urls')),
     path('shop/',include('shop.urls')),
     path('accounts/',include('accounts.urls')),
     path('admin_panel/',include('admin_panel.urls')),
