@@ -83,13 +83,16 @@ def register(request):
     return render(request, 'accounts/register.html', context)
 
 def log_in(request):
-    
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-
         user = authenticate(request, email=email, password=password)
+        
         if user:
+            if not user.is_active:
+                messages.error(request, 'Your account is not activated.')
+                return redirect('login')  
+            
             try:
                 cart = Cart.objects.get(cart_id=_cart_id(request))
                 is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
@@ -114,17 +117,17 @@ def log_in(request):
                                 item.save()
                             else:
                                 messages.warning(request, f"Adding {item.product_attribute.product} to your cart exceeds the available stock.")
-                        
-            except:
+            except Cart.DoesNotExist:
                 pass
+
             if not user.is_blocked and user.is_authenticated:
                 login(request, user)
                 if user.is_superuser:
                     return redirect('user_list') 
                 else:
                     if 'cart_items_added' in request.session:
-                        del request.session['cart_items_added']  # Clear flag after use
-                        return redirect('cart')  # User added items, redirect to cart
+                        del request.session['cart_items_added']
+                        return redirect('cart')
                     else:
                         return redirect('home') 
             else:
