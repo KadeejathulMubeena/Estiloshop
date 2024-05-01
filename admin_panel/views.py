@@ -749,11 +749,13 @@ def delete_images(request, id):
     return render(request, 'admin_panel/variation_list.html', {'image': image})
 
 def add_brand(request):
+    for i in Brand.objects.all():
+        print(i.brand_name)
     if request.method == 'POST':
         form = BrandForm(request.POST, request.FILES)
         if form.is_valid():
             name = request.GET.get('brand_name')
-            existing_brand = Brand.objects.filter(brand_name__iexact = name).exists
+            existing_brand = Brand.objects.filter(brand_name__iexact = name).exists()
             if existing_brand:
                 messages.error(request,"This brand already exists.")
             else:
