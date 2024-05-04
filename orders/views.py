@@ -210,10 +210,18 @@ def place_order(request, total=0, quantity=0):
     cart_items = CartItem.objects.filter(user=current_user)
     cart_count = cart_items.count()
     if cart_count <= 0:
-        return redirect('shop')
+        messages.error(request, 'Your cart is empty. Please add items to your cart.')
+        return redirect('shop')  
+    
     if all(cart_item.product_attribute.stock <= 0 for cart_item in cart_items):
-            messages.error(request, 'All products are out of stock. Please add products in stock.')
-            return redirect('checkout')
+        messages.error(request, 'All products are out of stock. Please add products in stock.')
+        return redirect('shop')  
+
+    addresses = Address.objects.filter(user=current_user)
+    if not addresses.exists():
+        messages.error(request, 'Please add a billing address before placing an order.')
+        return redirect('checkout')
+    
     grand_total = 0
     tax = 0
     total = 0 
