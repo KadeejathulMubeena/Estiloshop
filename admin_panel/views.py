@@ -19,7 +19,7 @@ from datetime import date
 def superuser_required(view_func):
     actual_decorator = user_passes_test(
         lambda u: u.is_active and u.is_superuser,
-        login_url='/login', 
+        login_url='login/', 
     )
     return actual_decorator(view_func)
 
@@ -63,7 +63,7 @@ def show_sales_report(request):
     
     return render(request,'admin_panel/sales_report_pdf.html',context)
 
-@login_required
+@superuser_required
 def admin_home(request):
     # sales card
     filter_sales = request.GET.get('filter_sales', 'today')
@@ -295,7 +295,6 @@ def admin_home(request):
     return render(request,'admin_panel/index.html',context)
 
 
-@superuser_required
 @login_required(login_url='login')
 def user_list(request):
     users=Account.objects.all().order_by('-id')

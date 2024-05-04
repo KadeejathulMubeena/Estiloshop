@@ -123,7 +123,7 @@ def log_in(request):
             if not user.is_blocked and user.is_authenticated:
                 login(request, user)
                 if user.is_superuser:
-                    return redirect('user_list') 
+                    return redirect('admin_home') 
                 else:
                     if 'cart_items_added' in request.session:
                         del request.session['cart_items_added']
