@@ -19,7 +19,7 @@ from datetime import date
 def superuser_required(view_func):
     actual_decorator = user_passes_test(
         lambda u: u.is_active and u.is_superuser,
-        login_url='login/', 
+        login_url='/accounts/login/', 
     )
     return actual_decorator(view_func)
 
