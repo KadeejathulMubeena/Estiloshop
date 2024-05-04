@@ -26,7 +26,11 @@ def apply_coupon(request):
         coupon_code = request.POST.get('coupon_code')
 
         if coupon_code:
-            coupon = get_object_or_404(Coupon, coupon_code=coupon_code)
+            try:
+                coupon = Coupon.objects.get(coupon_code=coupon_code)
+            except Coupon.DoesNotExist:
+                messages.error(request, 'Invalid coupon code.')
+                return redirect('checkout')
             current_user = request.user
 
             # Check if coupon is already applied to the current order
