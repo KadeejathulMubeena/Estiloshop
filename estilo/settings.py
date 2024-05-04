@@ -133,6 +133,9 @@ USE_TZ = True
 
 # Security & HTTPS settings
 
+SESSION_COOKIE_DOMAIN = '.estilo.today'
+CSRF_COOKIE_DOMAIN = '.estilo.today'
+
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = False
