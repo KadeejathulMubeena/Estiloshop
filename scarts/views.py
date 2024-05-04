@@ -68,12 +68,17 @@ def add_to_cart(request, product_id):
     return redirect('product_detail', category_slug=product.category.slug, product_slug=product.slug)
 
 def cart(request):
-    
+
+    cart_items = None
     cart = None
     if request.user.is_authenticated:
-        cart_items=CartItem.objects.all().filter(user = request.user,is_active=True)
+        cart_items = CartItem.objects.filter(user=request.user, is_active=True)
     else:
-        cart = Cart.objects.get(cart_id = _cart_id(request))
+        cart_id = _cart_id(request)  # Call the _cart_id function with request
+        try:
+            cart = Cart.objects.get(cart_id=cart_id)
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(cart_id=cart_id)
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
 
     # Calculate total, tax, and grand total based on cart items

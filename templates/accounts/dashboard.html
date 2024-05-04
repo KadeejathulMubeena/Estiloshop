@@ -49,7 +49,9 @@
 								<img src="https://www.w3schools.com/howto/img_avatar.png" alt="Default Profile Picture" width="72" height="72" style="border-radius: 50%;border: 2px solid #D19C97;" class="avatar">			
 							{% endif %}
 							<p class="mb-0">{{user.email}}</p>
-							<p class="mb-0">Mobile no. : {{userprofile.phone}}</p>
+							{% if userprofile.phone %}
+								<p class="mb-0">Mobile no. : {{userprofile.phone}}</p>
+							{% endif %}
 						</div>
 					</div> 
 				</div>
