@@ -80,7 +80,7 @@
                         <button type="button" class="btn btn-primary dropdown-toggle" style="width: 320px;" data-toggle="dropdown">Categories</button>
                         <div class="dropdown-menu" style="width: 320px;">
                             <a href="{% url 'shop' %}" class="dropdown-item category">All Products</a>
-                            {% for category in categories_header_or_footer %}
+                            {% for category in links %}
                             <a href="{{ category.get_url }}" class="dropdown-item category">{{ category.category_name }}</a>
                             {% endfor %}
                         </div>

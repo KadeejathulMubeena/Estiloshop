@@ -28,7 +28,7 @@
                     <div class="col-md-4 mb-5">
                         <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            {% for category in categories_header_or_footer %}
+                            {% for category in links %}
                             <a href="{{ category.get_url }}" class="text-dark mb-2"><i class="fa fa-angle-right mr-2"></i>{{ category.category_name }} Collection</a>
                             {% endfor %}
                         </div>
