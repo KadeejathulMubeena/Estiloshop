@@ -768,12 +768,11 @@ def delete_images(request, id):
 
 @superuser_required
 def add_brand(request):
-    for i in Brand.objects.all():
-        print(i.brand_name)
+    
     if request.method == 'POST':
         form = BrandForm(request.POST, request.FILES)
         if form.is_valid():
-            name = request.GET.get('brand_name')
+            name = form.cleaned_data['brand_name']
             existing_brand = Brand.objects.filter(brand_name__iexact = name).exists()
             if existing_brand:
                 messages.error(request,"This brand already exists.")
@@ -796,7 +795,11 @@ def add_brand(request):
 
 @superuser_required
 def edit_brand(request, brand_id):
-    brand = get_object_or_404(Brand, id=brand_id)
+    try:
+        brand = Brand.objects.get(id=brand_id)
+    except Brand.DoesNotExist:
+        messages.error(request, "Brand not found.")
+        return redirect('brand_list')
 
     if request.method == 'POST':
         form = BrandForm(request.POST, request.FILES, instance=brand)

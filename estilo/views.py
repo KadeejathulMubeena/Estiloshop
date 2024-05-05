@@ -8,14 +8,21 @@ from datetime import datetime
 
 def home(request):
     categories = Category.objects.annotate(
-    product_count=Count('product', filter=Exists(
-        Product.objects.filter(
-            category_id=OuterRef('pk'),
-            productattribute__product_id=OuterRef('product__id')  # Assuming ProductAttribute has a ForeignKey to Product
+    product_count=Count(
+        'product',
+        filter=Exists(
+            Product.objects.filter(
+                category_id=OuterRef('pk'),
+                productattribute__product_id=OuterRef('product__id'),  
+                brand__soft_delete=False,
+                is_available = True,
+                category__list=True  
+            )
         )
-    ))
-)
-    products=Product.objects.filter(is_available=True).order_by('-created_date')[:9]
+    )
+).exclude(product_count=0)
+    categories_header_or_footer = Category.objects.filter(list=True, product__brand__soft_delete=False,product__is_available = True).distinct()
+    products=Product.objects.filter(is_available=True,brand__soft_delete=False,category__list = True).order_by('-created_date')[:4]
     brands=Brand.objects.annotate(product_count=Count('product')).order_by('-id')
     products_with_attributes = []  
     
@@ -48,6 +55,7 @@ def home(request):
         'categories':categories,
         'products':products,
         'brands' : brands,
-        'products_with_attributes' : products_with_attributes
+        'products_with_attributes' : products_with_attributes,
+        'categories_header_or_footer':categories_header_or_footer
     }
     return render(request,'shop/index.html',context)
