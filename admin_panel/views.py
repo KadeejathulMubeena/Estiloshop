@@ -295,7 +295,7 @@ def admin_home(request):
     return render(request,'admin_panel/index.html',context)
 
 
-@login_required(login_url='login')
+@superuser_required
 def user_list(request):
     users=Account.objects.all().order_by('-id')
     users_count = users.count()
@@ -310,7 +310,7 @@ def user_list(request):
         }
     return render(request, 'admin_panel/user_list.html', context)
 
-@login_required(login_url='login')
+@superuser_required
 def product_list(request):
     
     products = Product.objects.all().order_by('-created_date')
@@ -328,6 +328,7 @@ def product_list(request):
 
 from django.db import IntegrityError
 
+@superuser_required
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
@@ -362,8 +363,7 @@ def add_product(request):
     context = {'form': form}
     return render(request, 'admin_panel/add_product.html', context)
 
-
-@login_required(login_url='login')
+@superuser_required
 def edit_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     if request.method == 'POST':
@@ -399,6 +399,7 @@ def delete_product(request,id):
             return redirect('admin_product_list')
     return render(request,'admin_panel/delete_product.html',{'product': product})
 
+@superuser_required
 def list_product(request,product_id):
     product = get_object_or_404(Product,id = product_id)
     if request.method == 'POST':
@@ -413,7 +414,8 @@ def soft_delete_product(request,product_id):
         product.is_available = False
         product.save()
         return redirect('admin_product_list')
-    
+
+@superuser_required   
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST, request.FILES)
@@ -437,6 +439,7 @@ def add_category(request):
 
     return render(request, 'admin_panel/add_category.html', {'form': form})
 
+@superuser_required
 def admin_category_list(request):
     categories=Category.objects.all().order_by('-id')
     category_count = categories.count()
@@ -451,6 +454,7 @@ def admin_category_list(request):
         }
     return render(request, 'admin_panel/category_list.html', context)
 
+@superuser_required
 def edit_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
 
@@ -520,6 +524,7 @@ def unblock_user_admin(request, user_id):
     
     return redirect('user_list')
 
+@superuser_required
 def add_size(request):
     if request.method == 'POST':
         form = SizeForm(request.POST)
@@ -537,6 +542,7 @@ def add_size(request):
 
     return render(request, 'admin_panel/add_size.html', {'form': form})
 
+@superuser_required
 def add_color(request):
     if request.method == 'POST':
         form = ColorForm(request.POST)
@@ -561,13 +567,14 @@ def add_color(request):
         form = ColorForm()
     return render(request, 'admin_panel/add_color.html', {'form': form})
  
-
+@superuser_required
 def size_color_list(request):
     sizes = Size.objects.all().order_by('-id')
     colors = Color.objects.all().order_by('-id')
     context = {'sizes': sizes, 'colors': colors}
     return render(request, 'admin_panel/size_color.html', context)
 
+@superuser_required
 def add_product_attribute(request):
     if request.method == 'POST':
         form = ProductAttributeForm(request.POST, request.FILES)
@@ -600,6 +607,7 @@ def add_product_attribute(request):
 
     return render(request, 'admin_panel/add_product_attribute.html', {'form': form})
 
+@superuser_required
 def variation_list(request):
     variants=ProductAttribute.objects.all().order_by('-created_date')
     variants_count = variants.count()
@@ -620,6 +628,7 @@ def variation_list(request):
         }
     return render(request, 'admin_panel/variation_list.html', context)
 
+@superuser_required
 def edit_variation(request, variation_id):
     variation = get_object_or_404(ProductAttribute, pk=variation_id)
     if request.method == 'POST':
@@ -681,6 +690,7 @@ def listed_attribute(request,attr_id):
         attribute.save()
         return redirect('variation_list')
 
+@superuser_required
 def product_images_list(request):
     products = Product.objects.filter(productattribute__isnull=False).distinct()
 
@@ -689,6 +699,7 @@ def product_images_list(request):
         }
     return render(request, 'admin_panel/product_images_list.html', context)
 
+@superuser_required
 def product_images(request,product_id):
     product = Product.objects.get(id = product_id)
     product_attributes = ProductAttribute.objects.filter(product = product)
@@ -708,6 +719,7 @@ def validate_image(file):
     allowed_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.webp')
     return file.name.lower().endswith(allowed_extensions)
 
+@superuser_required
 def add_product_images(request):
     product_attributes = ProductAttribute.objects.all()
     invalid_image = False
@@ -747,6 +759,7 @@ def delete_images(request, id):
 
     return render(request, 'admin_panel/variation_list.html', {'image': image})
 
+@superuser_required
 def add_brand(request):
     for i in Brand.objects.all():
         print(i.brand_name)
@@ -774,6 +787,7 @@ def add_brand(request):
 
     return render(request, 'admin_panel/add_brand.html', context)
 
+@superuser_required
 def edit_brand(request, brand_id):
     brand = get_object_or_404(Brand, id=brand_id)
 
@@ -802,6 +816,7 @@ def edit_brand(request, brand_id):
         }
     return render(request, 'admin_panel/edit_brand.html', context)
 
+@superuser_required
 def brand_list(request):
     brand = Brand.objects.all().order_by('-id')
     
@@ -830,7 +845,8 @@ def soft_delete_brand(request,brand_id):
         brand.soft_delete = True
         brand.save()
         return redirect('brand_list')
-    
+
+@superuser_required   
 def list_orders(request):
     orders = Order.objects.filter(is_ordered = True).order_by('-id')
     orders_count = orders.count()
@@ -881,7 +897,7 @@ def update_order_status(request, order_id, status):
         messages.error(request, f"Invalid status: {status}")
     return redirect('list_orders')
 
-@login_required
+@superuser_required
 def admin_order_details(request, order_id):
     order_products = OrderProduct.objects.filter(order__user=request.user, order__id=order_id)
     order = Order.objects.get(is_ordered=True, id=order_id)
@@ -901,6 +917,7 @@ def admin_order_details(request, order_id):
 
     return render(request, 'admin_panel/admin_order_details.html', context)
 
+@superuser_required
 def add_coupon(request):
     if request.method == 'POST':
         form = CouponForm(request.POST)
@@ -923,6 +940,7 @@ def add_coupon(request):
     }
     return render(request, 'admin_panel/add_coupon.html', context)
 
+@superuser_required
 def coupon_list(request):
     coupons = Coupon.objects.all().order_by('-id')
     current_datetime = timezone.now()
@@ -964,6 +982,7 @@ def list_coupon(request,coupon_id):
         coupon.save()
         return redirect('coupon_list')
 
+@superuser_required
 def add_product_offer(request):
     if request.method == 'POST':
         form = ProductOfferForm(request.POST)
@@ -992,6 +1011,7 @@ def add_product_offer(request):
     }
     return render(request, 'admin_panel/add_product_offer.html', context)
 
+@superuser_required
 def edit_product_offer(request,p_offer_id):
     p_offer = ProductOffer.objects.get(id =p_offer_id )
     if request.method == 'POST':
@@ -1025,6 +1045,7 @@ def edit_product_offer(request,p_offer_id):
     }
     return render(request, 'admin_panel/edit_product_offer.html', context)
 
+@superuser_required
 def product_offer_list(request):
     p_offers = ProductOffer.objects.all().order_by('-id')
     current_datetime = datetime.now()
@@ -1035,6 +1056,7 @@ def product_offer_list(request):
             offer.save()
     return render(request, 'admin_panel/product_offer_list.html',{'p_offers':p_offers})
 
+@superuser_required
 def add_category_offer(request):
     if request.method == 'POST':
         form = CategoryOfferForm(request.POST)
@@ -1063,6 +1085,7 @@ def add_category_offer(request):
     }
     return render(request, 'admin_panel/add_category_offer.html', context)
 
+@superuser_required
 def edit_category_offer(request,cat_offer_id):
     cat_offer = CategoryOffer.objects.get(id =cat_offer_id )
     if request.method == 'POST':
@@ -1096,6 +1119,7 @@ def edit_category_offer(request,cat_offer_id):
     }
     return render(request, 'admin_panel/edit_category_offer.html', context)
 
+@superuser_required
 def category_offer_list(request):
     c_offers = CategoryOffer.objects.all().order_by('-id')
     current_datetime = timezone.now()
