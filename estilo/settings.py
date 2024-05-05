@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -133,15 +133,15 @@ USE_TZ = True
 
 # Security & HTTPS settings
 
-#SESSION_COOKIE_DOMAIN = '.estilo.today'
-#CSRF_COOKIE_DOMAIN = '.estilo.today'
+SESSION_COOKIE_DOMAIN = '.estilo.today'
+CSRF_COOKIE_DOMAIN = '.estilo.today'
 
-#SESSION_COOKIE_SECURE = True
-#CSRF_COOKIE_SECURE = True
-#SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False
 
-#CORS_ALLOW_ALL_ORIGINS = True
-#CSRF_TRUSTED_ORIGINS = ['https://www.estilo.today','https://estilo.today']
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = ['https://www.estilo.today','https://estilo.today']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
