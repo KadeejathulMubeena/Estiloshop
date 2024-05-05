@@ -99,6 +99,7 @@ def remove_coupon(request):
 
     return redirect('checkout')
 
+@login_required(login_url='login')
 def payments(request, order_id):
     current_user = request.user
     order = get_object_or_404(Order, id = order_id)
@@ -144,6 +145,7 @@ def payments(request, order_id):
     }
     return render(request, 'shop/payment.html', context)
 
+@login_required(login_url='login')
 def cash_on_delivery(request,order_number):
     current_user = request.user
 
@@ -310,6 +312,7 @@ def place_order(request, total=0, quantity=0):
 from django.http import Http404
 
 @transaction.atomic
+@login_required(login_url='login')
 def confirm_razorpay_payment(request, order_number):
     current_user = request.user
     try:
@@ -570,7 +573,8 @@ def payment_with_wallet(request, order_number):
     else:
         messages.error(request,'Insufficient funds in wallet for this order.') 
         return redirect('payments',order_id = order.id)
-        
+
+@login_required(login_url='login')
 def order_confirmed(request, order_number):
     user = request.user
     order = Order.objects.get(user = user,order_number=order_number)
@@ -581,6 +585,7 @@ def order_confirmed(request, order_number):
     
     return render(request, 'orders/order_success.html',context)
 
+@login_required(login_url='login')
 def order_invoice(request, order_id):
     user = request.user
     try:

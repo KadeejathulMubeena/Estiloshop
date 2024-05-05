@@ -446,7 +446,7 @@ def return_order(request, order_id):
     }
     return render(request, 'accounts/return_order_confirmation.html', context)
 
-
+@login_required(login_url='login')
 def add_address(request):
     states = State.objects.all()
     if request.method == 'POST':
@@ -480,7 +480,7 @@ def ajax_load_district(request):
     }
     return render(request,'accounts/district_dropdown_option.html',context)
 
-
+@login_required(login_url='login')
 def edit_address(request, address_id):
     address = get_object_or_404(Address, pk=address_id)
     states = State.objects.all()
@@ -509,7 +509,8 @@ def delete_address(request, address_id):
         return redirect('checkout')
     else:
         return redirect('dashboard') 
-    
+
+@login_required(login_url='login')
 def wallet(request):
     wallet, created = Wallet.objects.get_or_create(user=request.user)
     if created:
@@ -525,6 +526,7 @@ def wallet(request):
     }
     return render(request, 'accounts/wallet.html',context)
 
+@login_required(login_url='login')
 def wallet_transaction(request):
     wallet = Wallet.objects.get(user=request.user)
     transactions = WalletTransaction.objects.filter(wallet=wallet).order_by('-transaction_date')

@@ -21,7 +21,14 @@ def superuser_required(view_func):
         lambda u: u.is_active and u.is_superuser,
         login_url='/accounts/login/', 
     )
-    return actual_decorator(view_func)
+    
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.is_superuser:
+            messages.error(request, "You must be a superuser to access this page.")
+            return redirect('/accounts/login/')
+        return view_func(request, *args, **kwargs)
+
+    return actual_decorator(_wrapped_view)
 
 def show_sales_report(request):
     if request.method == 'POST':

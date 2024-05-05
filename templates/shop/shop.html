@@ -40,7 +40,7 @@
                                         <div class="col-lg-4 col-md-6 col-sm-12 pb-1 product-attribute">
                                             <div class="card product-item border-0 mb-4">
                                                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                                    <img class="img-fluid w-100" style="height:350px" src="{{ product_with_attribute.first_attribute.image.url }}" alt="">
+                                                    <a href="{{ product_with_attribute.product.get_url }}"><img class="img-fluid w-100" style="height:350px" src="{{ product_with_attribute.first_attribute.image.url }}" alt=""></a>
                                                 </div>
                                                 <div class="card-body border-left border-right text-center p-0 pt-3 pb-2">
                                                     <h5 class="text-truncate mb-2">{{ product_with_attribute.product.name|capfirst }}</h5>
