@@ -909,7 +909,7 @@ def update_order_status(request, order_id, status):
 
 @superuser_required
 def admin_order_details(request, order_id):
-    order_products = OrderProduct.objects.filter(order__user=request.user, order__id=order_id)
+    order_products = OrderProduct.objects.filter(order__id=order_id)
     order = Order.objects.get(is_ordered=True, id=order_id)
     
     payment = Payment.objects.get(order__id=order_id)
